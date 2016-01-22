@@ -61,6 +61,7 @@ class Mm_Clean_Content {
 		// Handle the PHP side of the AJAX calls.
 		add_action( 'wp_ajax_mm_clean_post_type_content', array( $this, 'clean_post_type_content' ) );
 		add_action( 'wp_ajax_mm_clean_content', array( $this, 'clean_specific_post_content' ) );
+		add_action( 'wp_ajax_mm_clean_content_get_options', array( $this, 'get_options' ) );
 
 		// Add action links to the posts and pages admin screens.
 		add_action( 'current_screen', array( $this, 'admin_action_links' ) );
@@ -184,6 +185,17 @@ class Mm_Clean_Content {
 				'description' => __( 'Enter all allowed attributes', 'mm-clean-content' ),
 			)
 		);
+	}
+
+	/**
+	 * Get Options values of user defined elements/attributes.
+	 *
+	 * @since  1.0.0
+	 */
+	public function get_options() {
+
+		$options = get_option( 'mm_clean_content_options' );
+		wp_send_json( $options );
 	}
 
 	/**
@@ -329,6 +341,19 @@ class Mm_Clean_Content {
 				'ajax_object',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' )
+				)
+			);
+
+			wp_localize_script(
+				MM_CLEAN_CONTENT_SLUG . '-admin-js',
+				'mm_clean_content_messages',
+				array(
+					'confirm_post_type'   => esc_html__( 'You are about to clean the content for the post type:', 'mm-clean-content' ),
+					'confirm_post'        => esc_html__( 'You are about to clean post:', 'mm-clean-content' ),
+					'confirm_elements'    => esc_html__( 'Only these elements will be allowed to remain in the content:', 'mm-clean-content' ),
+					'confirm_attributes'  => esc_html__( 'Only these attributes will be allowed to remain:', 'mm-clean-content' ),
+					'confirm_warning'     => esc_html__( 'This action cannot be undone, and it is HIGHLY recommended that you have a backup of the data you are about to clean.', 'mm-clean-content' ),
+					'confirm_final'       => esc_html__( 'Are you sure you want to proceed?', 'mm-clean-content' ),
 				)
 			);
 		}

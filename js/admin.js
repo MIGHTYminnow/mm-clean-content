@@ -14,8 +14,7 @@ jQuery( document ).ready( function( $ ) {
 		var allowedElements   = $( '#mm-clean-content-options-allowed-elements').text();
 		var allowedAttributes = $( '#mm-clean-content-options-allowed-attributes').text();
 		
-		var message = 'You are about to clean the content for the post type: "' + postTypeLabel + '".\n\rOnly these elements will be allowed to remain in the content:\n\r"' + allowedElements + '".\n\rOnly these attributes will be allowed to remain:\n\r"' + allowedAttributes + '".\n\rThis action cannot be undone, and it is HIGHLY recommended that you have a backup of the data you are about to clean.\n\rAre you sure you want to proceed?';
-
+		var message = mm_clean_content_messages.confirm_post_type + ' "' + postTypeLabel + '".\n\r' + mm_clean_content_messages.confirm_elements + '\n\r' + allowedElements + '\n\r' + mm_clean_content_messages.confirm_attributes + '\n\r' + allowedAttributes + '\n\r' + mm_clean_content_messages.confirm_warning + '\n\r' + mm_clean_content_messages.confirm_final;
 		var confirmation  = confirm( message );
 			
 		if ( confirmation ) {
@@ -38,22 +37,44 @@ jQuery( document ).ready( function( $ ) {
 	// Click action for the Clean Content link.
 	$( '.mm-clean-content-link' ).on( 'click', function() {
 
-		// Store the clicked element
-		$this = $( this );
+	    // Store the clicked element
+	    var $this = $( this );
+	    
+	    // Get the post title.
+	    var postTitle = $this.closest( 'td.title' ).find( 'a.row-title' ).first().text();
 
-		$( '.mm-clean-content-loading-gif' ).show();
+	    $( '.mm-clean-content-loading-gif' ).show();
 
-		ajax_object.post_id = $this.attr( 'data-post-id' );
+	    var optionsData = {
+	        'action': 'mm_clean_content_get_options',
+	    }
 
-		var data = {
-			'action': 'mm_clean_content',
-			'post_id': ajax_object.post_id
-		};
+	    var options = $.post( ajax_object.ajax_url, optionsData );
 
-		$.post( ajax_object.ajax_url, data, function( response ) {
-			$( '.mm-clean-content-loading-gif' ).hide();
-			$this.replaceWith( response );
-		});
+	    options.done( function( response ) {
+
+	    	var allowedElements = response.allowed_elements;
+	    	var allowedAttributes = response.allowed_attributes;
+		    var message = mm_clean_content_messages.confirm_post + ' "' + postTitle + '".\n\r' + mm_clean_content_messages.confirm_elements + '\n\r' + allowedElements + '\n\r' + mm_clean_content_messages.confirm_attributes + '\n\r' + allowedAttributes + '\n\r' + mm_clean_content_messages.confirm_warning + '\n\r' + mm_clean_content_messages.confirm_final;
+			var confirmation  = confirm( message );
+
+			if ( confirmation ) {
+			
+		        ajax_object.post_id = $this.attr( 'data-post-id' );
+	
+		        var data = {
+		            'action': 'mm_clean_content',
+		            'post_id': ajax_object.post_id
+		        };
+	
+		        $.post( ajax_object.ajax_url, data, function( response ) {
+		            $( '.mm-clean-content-loading-gif' ).hide();
+		            $this.replaceWith( response );
+		        });
+			} else {
+				$( '.mm-clean-content-loading-gif' ).hide();
+			}			        
+	    });
 	});
 
 });
