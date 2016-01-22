@@ -38,12 +38,13 @@ jQuery( document ).ready( function( $ ) {
 	$( '.mm-clean-content-link' ).on( 'click', function() {
 
 	    // Store the clicked element
-	    var $this = $( this );
+        var $this    = $( this );
+        var $spinner = $this.next( '.mm-clean-content-loading-gif' );	    
 	    
 	    // Get the post title.
 	    var postTitle = $this.closest( 'td.title' ).find( 'a.row-title' ).first().text();
 
-	    $( '.mm-clean-content-loading-gif' ).show();
+	    $spinner.show();
 
 	    var optionsData = {
 	        'action': 'mm_clean_content_get_options',
@@ -72,7 +73,7 @@ jQuery( document ).ready( function( $ ) {
 		            $this.replaceWith( response );
 		        });
 			} else {
-				$( '.mm-clean-content-loading-gif' ).hide();
+				$spinner.hide();
 			}			        
 	    });
 	});
