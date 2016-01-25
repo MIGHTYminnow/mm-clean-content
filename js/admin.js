@@ -17,7 +17,8 @@ jQuery( document ).ready( function( $ ) {
 		var allowedAttributes = $( '#mm-clean-content-options-allowed-attributes').text();
 
 		// Build the confirm message content and trigger the confirm box.
-		var message = mm_clean_content_messages.confirm_post_type + ' "' + postTypeLabel + '".\n\r' + mm_clean_content_messages.confirm_elements + '\n\r' + allowedElements + '\n\r' + mm_clean_content_messages.confirm_attributes + '\n\r' + allowedAttributes + '\n\r' + mm_clean_content_messages.confirm_warning + '\n\r' + mm_clean_content_messages.confirm_final;
+		var messages = mm_clean_content_messages;
+		var message = messages.confirm_post_type + ' "' + postTypeLabel + '".\n\r' + messages.confirm_elements + '\n\r' + allowedElements + '\n\r' + messages.confirm_attributes + '\n\r' + allowedAttributes + '\n\r' + messages.confirm_warning + '\n\r' + messages.confirm_final;
 		var confirmation = confirm( message );
 
 		// If the user clicks confirm, make the Ajax request to do the actual cleaning.
@@ -54,7 +55,7 @@ jQuery( document ).ready( function( $ ) {
 		// Build the data for the first Ajax request.
 		var optionsData = {
 			'action': 'mm_clean_content_get_options',
-		}
+		};
 
 		// Make the first Ajax request and set up a deferred object.
 		var options = $.post( ajax_object.ajax_url, optionsData );
@@ -64,7 +65,8 @@ jQuery( document ).ready( function( $ ) {
 
 			var allowedElements = response.allowed_elements;
 			var allowedAttributes = response.allowed_attributes;
-			var message = mm_clean_content_messages.confirm_post + ' "' + postTitle + '".\n\r' + mm_clean_content_messages.confirm_elements + '\n\r' + allowedElements + '\n\r' + mm_clean_content_messages.confirm_attributes + '\n\r' + allowedAttributes + '\n\r' + mm_clean_content_messages.confirm_warning + '\n\r' + mm_clean_content_messages.confirm_final;
+			var messages = mm_clean_content_messages;
+			var message = messages.confirm_post + ' "' + postTitle + '".\n\r' + messages.confirm_elements + '\n\r' + allowedElements + '\n\r' + messages.confirm_attributes + '\n\r' + allowedAttributes + '\n\r' + messages.confirm_warning + '\n\r' + messages.confirm_final;
 			var confirmation  = confirm( message );
 
 			// If you user clicks confirm, make a second Ajax request to trigger the cleaning.
