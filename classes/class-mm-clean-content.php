@@ -557,8 +557,8 @@ class Mm_Clean_Content {
 
 		// Manually add 'post' and 'page' types.
 		$default_post_types = array(
-				'post' => __( 'Post', 'mm-components' ),
-				'page' => __( 'Page', 'mm-components' ),
+				'post' => __( 'Post', 'mm-clean-content' ),
+				'page' => __( 'Page', 'mm-clean-content' ),
 		);
 
 		$post_types = $default_post_types + $formatted_cpts;
