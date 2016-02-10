@@ -302,7 +302,7 @@ class Mm_Clean_Content {
 			        <th scope="row"><?php _e( 'Select a Post Type', 'mm-clean-content' ); ?></th>
 			        <td>
         				<select id="mm-clean-post-types-select">
-							<?php $post_types = mm_get_post_types(); ?>
+							<?php $post_types = $this->get_public_post_types(); ?>
 							<?php foreach ( $post_types as $key => $value ) : ?>
 								<option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $value ); ?></option>
 							<?php endforeach; ?>
@@ -529,6 +529,41 @@ class Mm_Clean_Content {
 		$string = wp_kses( $string, $allowed_elements_attributes );
 
 		return $string;
+	}
+
+	/**
+	 * Return an array of all public post types.
+	 *
+	 * @since   1.0.0
+	 *
+	 * @param   string  $context  The context to pass to our filter.
+	 *
+	 * @return  array             The array of formatted post types.
+	 */
+	public function get_public_post_types( $context = '' ) {
+
+		$post_type_args = array(
+				'public'   => true,
+				'_builtin' => false
+		);
+
+		$custom_post_types = get_post_types( $post_type_args, 'objects', 'and' );
+
+		$formatted_cpts = array();
+
+		foreach( $custom_post_types as $post_type ) {
+			$formatted_cpts[ $post_type->name ] = $post_type->labels->singular_name;
+		}
+
+		// Manually add 'post' and 'page' types.
+		$default_post_types = array(
+				'post' => __( 'Post', 'mm-clean-content' ),
+				'page' => __( 'Page', 'mm-clean-content' ),
+		);
+
+		$post_types = $default_post_types + $formatted_cpts;
+
+		return apply_filters( 'mm_clean_content_post_types', $post_types, $context );
 	}
 
 	/**
